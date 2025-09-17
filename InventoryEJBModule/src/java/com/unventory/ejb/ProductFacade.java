@@ -31,32 +31,67 @@ public class ProductFacade extends AbstractFacade<Product> implements ProductFac
         super(Product.class);
     }
     
-    public void editProduct(Long id,Product updatedProducts)
-    {
-        Product existingProducts= findProduct(id);
-        
-        existingProducts.setName(updatedProducts.getName());
-        existingProducts.setDescription(updatedProducts.getDescription());
-        existingProducts.setBarcode(updatedProducts.getBarcode());
-        existingProducts.setPrice(updatedProducts.getPrice());
-        existingProducts.setSku(updatedProducts.getSku());
-        
-        
-        em.merge(existingProducts);
+    public List<Product> findAll() {
+        try {
+            Query query = em.createQuery("SELECT p FROM Product p");
+            return query.getResultList();
+        } catch (Exception e) {
+            throw new RuntimeException("Database error while retrieving all products: " + e.getMessage());
+        }
     }
     
-    
-    public Product findProduct(Long id)
-    {
-        Query query=em.createQuery("SELECT p From Product p where p.id =:id");
-        query.setParameter("id", id);
-        List<Product> products = query.getResultList();
-    
-        if (products.isEmpty()) 
-        {
-            return null; 
+    public boolean editProduct(Long id, Product updatedProduct) {
+        if (id == null || updatedProduct == null) {
+            return false;
         }
-        return products.get(0);
+
+        try {
+            Product existingProduct = findProduct(id);
+            if (existingProduct == null) {
+                return false; 
+            }
+
+            
+            if (updatedProduct.getName() != null && !updatedProduct.getName().trim().isEmpty()) {
+                existingProduct.setName(updatedProduct.getName());
+            }
+            if (updatedProduct.getDescription() != null) {
+                existingProduct.setDescription(updatedProduct.getDescription());
+            }
+            if (updatedProduct.getPrice() != null) {
+                existingProduct.setPrice(updatedProduct.getPrice());
+            }
+            if (updatedProduct.getSku() != null && !updatedProduct.getSku().trim().isEmpty()) {
+                existingProduct.setSku(updatedProduct.getSku());
+            }
+            if (updatedProduct.getBarcode() != null) {
+                existingProduct.setBarcode(updatedProduct.getBarcode());
+            }
+
+            em.merge(existingProduct);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("Database error while updating product with ID " + id + ": " + e.getMessage());
+        }
+    }
+
+    @Override
+    public Product findProduct(Long id) {
+        if (id == null) {
+            return null;
+        }
+
+        try {
+            Query query = em.createQuery("SELECT p FROM Product p WHERE p.id = :id");
+            query.setParameter("id", id);
+            List<Product> products = query.getResultList();
+            if (products.isEmpty()) {
+                return null;
+            }
+            return products.get(0);
+        } catch (Exception e) {
+            throw new RuntimeException("Database error while finding product with ID " + id + ": " + e.getMessage());
+        }
     }
     
     @Override

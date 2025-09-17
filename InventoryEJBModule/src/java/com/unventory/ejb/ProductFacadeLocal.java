@@ -30,13 +30,11 @@ public interface ProductFacadeLocal {
 
     int count();
     
-    public Product findProduct(Long id);
+    boolean editProduct(Long id, Product updatedProduct);
     
-    public void editProduct(Long id,Product updatedProducts);
-    
-    
-    
+    Product findProduct(Long id);
     
     boolean deleteProduct(Long id);
+    
     
 }

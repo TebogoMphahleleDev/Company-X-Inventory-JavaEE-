@@ -3,7 +3,6 @@
     Created on : Sep 16, 2025, 9:21:59 AM
     Author     : User
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -12,6 +11,19 @@
         <title>Edit Output Page</title>
     </head>
     <body>
-        <h1>Product succesfully added</h1>
+        <h1>Edit Output</h1>
+        <%
+            Long id = (Long) request.getAttribute("id");
+            if (id != null) {
+        %>
+        <p>Product with ID: <%= id %> has been successfully updated.</p>
+        <%
+            } else {
+        %>
+        <p>Error: No product ID was provided.</p>
+        <%
+            }
+        %>
+        <p><a href="edit_product.jsp">Edit another product</a></p>
     </body>
 </html>
