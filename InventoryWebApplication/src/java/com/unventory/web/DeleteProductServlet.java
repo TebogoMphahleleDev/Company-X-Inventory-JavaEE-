@@ -23,7 +23,7 @@ public class DeleteProductServlet extends HttpServlet {
         Long id = null;
 
         try {
-            // Validate input
+           
             if (idParam == null || idParam.trim().isEmpty()) {
                 errorMessage = "Product ID is required.";
             } else {
@@ -37,7 +37,7 @@ public class DeleteProductServlet extends HttpServlet {
                 }
             }
 
-            // Proceed with deletion if no input errors
+            
             if (errorMessage == null) {
                 try {
                     boolean deleted = pf1.deleteProduct(id);
@@ -54,10 +54,10 @@ public class DeleteProductServlet extends HttpServlet {
             errorMessage = "An unexpected error occurred: " + e.getMessage();
         }
 
-        // Set attributes and forward to JSP
+       
         if (errorMessage != null) {
             request.setAttribute("errorMessage", errorMessage);
-            destination = "delete_product_error.jsp"; // Forward to error page
+            destination = "delete_product_error.jsp";
         }
 
         RequestDispatcher rd = request.getRequestDispatcher(destination);
